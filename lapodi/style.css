@@ -1,0 +1,107 @@
+:root {
+    --bg: #f4f7f6;
+    --card: #ffffff;
+    --text: #1f2937;
+    --accent: #2d9b6d;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #0f172a;
+        --card: #020617;
+        --text: #e5e7eb;
+    }
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+.app-container {
+    height: 100vh;
+    padding: 12px;
+}
+
+.app-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 14px;
+    background: var(--card);
+    box-shadow: 0 10px 30px rgba(0,0,0,.1);
+}
+
+/* Loader */
+.loader {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.spinner {
+    width: 42px;
+    height: 42px;
+    border: 4px solid #d1fae5;
+    border-top: 4px solid var(--accent);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Error */
+.error-box {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1100;
+}
+
+.error-box button {
+    margin-top: 12px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Fullscreen Button */
+.fullscreen-btn {
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    z-index: 900;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,.2);
+}
