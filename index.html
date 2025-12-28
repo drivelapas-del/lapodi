@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <title>LAPODI</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Loader -->
+    <div id="loader" class="loader">
+        <div class="spinner"></div>
+        <p>Memuat aplikasi…</p>
+    </div>
+
+    <!-- Error Network -->
+    <div id="errorBox" class="error-box hidden">
+        <h3>🚫 Gagal Memuat</h3>
+        <p>Periksa koneksi internet atau coba lagi.</p>
+        <button onclick="reloadApp()">Muat Ulang</button>
+    </div>
+
+    <!-- Fullscreen Button -->
+    <button id="fullscreenBtn" class="fullscreen-btn">⛶</button>
+
+    <!-- App Container -->
+    <div class="app-container">
+        <iframe
+            id="lapodiFrame"
+            class="app-frame"
+            src="https://script.google.com/macros/s/AKfycbysxmMyBFu-jahzvVLqoC0ltKO60R2NY7zyY-EyZ1I7E6XZLU4a9wMrmBYG2S5R8gBn/exec"
+            loading="lazy"
+            referrerpolicy="no-referrer"
+            sandbox="allow-scripts allow-forms allow-same-origin allow-downloads"
+            allowfullscreen>
+        </iframe>
+    </div>
+
+    <!-- JS -->
+    <script src="app.js"></script>
+</body>
+</html>
