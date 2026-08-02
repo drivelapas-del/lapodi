@@ -3,390 +3,56 @@
 <head>
     <meta charset="utf-8">
     <title>LAPODI</title>
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
     <style>
-        /* ========== RESET & BASE ========== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #0a0e17;
-            color: #ffffff;
-            height: 100vh;
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* ========== LOADER ========== */
-        .loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #0a0e17;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            transition: opacity 0.6s ease, visibility 0.6s ease;
-        }
-
-        .loader.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
-        .spinner {
-            width: 48px;
-            height: 48px;
-            border: 4px solid rgba(66, 133, 244, 0.2);
-            border-top-color: #4285f4;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loader p {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #8892a8;
-            letter-spacing: 0.5px;
-        }
-
-        /* ========== ERROR BOX ========== */
-        .error-box {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #1a1f2e;
-            padding: 40px;
-            border-radius: 16px;
-            border: 1px solid #ff4757;
-            text-align: center;
-            z-index: 9999;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-        }
-
-        .error-box.hidden {
-            display: none;
-        }
-
-        .error-box h3 {
-            font-size: 22px;
-            color: #ff4757;
-            margin-bottom: 12px;
-        }
-
-        .error-box p {
-            color: #8892a8;
-            font-size: 14px;
-            margin-bottom: 24px;
-            line-height: 1.6;
-        }
-
-        .error-box button {
-            background: #4285f4;
-            color: white;
-            border: none;
-            padding: 12px 32px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .error-box button:hover {
-            background: #5a9af5;
-        }
-
-        /* ========== FULLSCREEN BUTTON ========== */
-        .fullscreen-btn {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(26, 31, 46, 0.85);
-            backdrop-filter: blur(10px);
-            color: #ccd6f6;
-            border: 1px solid rgba(255,255,255,0.06);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            z-index: 9998;
-        }
-
-        .fullscreen-btn:hover {
-            transform: translateY(-2px);
-            background: rgba(66, 133, 244, 0.2);
-            border-color: rgba(66, 133, 244, 0.3);
-            color: #ffffff;
-        }
-
-        .fullscreen-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* ========== APP CONTAINER ========== */
-        .app-container {
-            width: 100vw;
-            height: 100vh;
-            background: #0a0e17;
-            overflow: hidden;
-        }
-
-        .app-frame {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: #ffffff;
-            display: block;
-        }
-
-        /* ========== RESPONSIVE ========== */
-        @media (max-width: 768px) {
-            .fullscreen-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 18px;
-                border-radius: 10px;
-                bottom: 16px;
-                right: 16px;
-            }
-
-            .error-box {
-                padding: 28px 20px;
-            }
-
-            .error-box h3 {
-                font-size: 18px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .fullscreen-btn {
-                width: 36px;
-                height: 36px;
-                font-size: 16px;
-                border-radius: 8px;
-                bottom: 12px;
-                right: 12px;
-            }
-        }
-
-        /* ========== SCROLLBAR ========== */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #0a0e17;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #1a1f2e;
-            border-radius: 3px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #2a2f3e;
-        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Inter',sans-serif;background:#0a0e17;height:100vh;overflow:hidden}
+        .loader{position:fixed;inset:0;background:#0a0e17;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10000;transition:.6s}
+        .loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+        .spinner{width:48px;height:48px;border:4px solid rgba(66,133,244,.2);border-top-color:#4285f4;border-radius:50%;animation:spin .8s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .loader p{margin-top:20px;font-size:14px;color:#8892a8}
+        .error-box{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#1a1f2e;padding:40px;border-radius:16px;border:1px solid #ff4757;text-align:center;z-index:9999;max-width:400px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.8)}
+        .error-box.hidden{display:none}
+        .error-box h3{font-size:22px;color:#ff4757;margin-bottom:12px}
+        .error-box p{color:#8892a8;font-size:14px;margin-bottom:24px}
+        .error-box button{background:#4285f4;color:#fff;border:none;padding:12px 32px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer}
+        .error-box button:hover{background:#5a9af5}
+        .fullscreen-btn{position:fixed;bottom:24px;right:24px;width:44px;height:44px;border-radius:12px;border:none;font-size:20px;cursor:pointer;background:rgba(26,31,46,.85);backdrop-filter:blur(10px);color:#ccd6f6;border:1px solid rgba(255,255,255,.06);box-shadow:0 4px 15px rgba(0,0,0,.3);z-index:9998;transition:.2s;display:flex;align-items:center;justify-content:center}
+        .fullscreen-btn:hover{transform:translateY(-2px);background:rgba(66,133,244,.2);border-color:rgba(66,133,244,.3);color:#fff}
+        .app-container{width:100vw;height:100vh;background:#0a0e17;overflow:hidden}
+        .app-frame{width:100%;height:100%;border:none;background:#fff;display:block}
+        @media(max-width:768px){.fullscreen-btn{width:40px;height:40px;font-size:18px;bottom:16px;right:16px}.error-box{padding:28px 20px}.error-box h3{font-size:18px}}
+        @media(max-width:480px){.fullscreen-btn{width:36px;height:36px;font-size:16px;bottom:12px;right:12px}}
+        ::-webkit-scrollbar{width:6px;height:6px}
+        ::-webkit-scrollbar-track{background:#0a0e17}
+        ::-webkit-scrollbar-thumb{background:#1a1f2e;border-radius:3px}
     </style>
 </head>
-
 <body>
-    <!-- Loader -->
-    <div id="loader" class="loader">
-        <div class="spinner"></div>
-        <p>Memuat aplikasi…</p>
-    </div>
-
-    <!-- Error Network -->
-    <div id="errorBox" class="error-box hidden">
-        <h3>🚫 Gagal Memuat</h3>
-        <p>Periksa koneksi internet atau coba lagi.</p>
-        <button onclick="reloadApp()">Muat Ulang</button>
-    </div>
-
-    <!-- Fullscreen Button -->
-    <button id="fullscreenBtn" class="fullscreen-btn" title="Mode Layar Penuh (F11)">⛶</button>
-
-    <!-- App Container -->
+    <div id="loader" class="loader"><div class="spinner"></div><p>Memuat aplikasi…</p></div>
+    <div id="errorBox" class="error-box hidden"><h3>🚫 Gagal Memuat</h3><p>Periksa koneksi internet atau coba lagi.</p><button onclick="reloadApp()">Muat Ulang</button></div>
+    <button id="fullscreenBtn" class="fullscreen-btn" title="Layar Penuh (F11)">⛶</button>
     <div class="app-container">
-        <iframe
-            id="lapodiFrame"
-            class="app-frame"
-            src="https://script.google.com/macros/s/AKfycbzO2ON14ucGrrZWcPwJifbjuYToxtIlJ5Twi92EVctAv7pLIBvMZ6qwEjDe2QhXFEE/exec"
-            loading="lazy"
-            referrerpolicy="no-referrer"
-            sandbox="allow-scripts allow-forms allow-same-origin allow-downloads allow-popups allow-modals allow-popups-to-escape-sandbox"
-            allowfullscreen>
-        </iframe>
+        <iframe id="lapodiFrame" class="app-frame" src="https://script.google.com/macros/s/AKfycbzO2ON14ucGrrZWcPwJifbjuYToxtIlJ5Twi92EVctAv7pLIBvMZ6qwEjDe2QhXFEE/exec" loading="lazy" referrerpolicy="no-referrer" sandbox="allow-scripts allow-forms allow-same-origin allow-downloads allow-popups allow-modals allow-popups-to-escape-sandbox" allowfullscreen></iframe>
     </div>
-
     <script>
-        // ============================================
-        // LAPODI - Main Application Script
-        // ============================================
-
-        (function() {
-            'use strict';
-
-            // ========== DOM REFERENCES ==========
-            const loader = document.getElementById('loader');
-            const errorBox = document.getElementById('errorBox');
-            const iframe = document.getElementById('lapodiFrame');
-            const fullscreenBtn = document.getElementById('fullscreenBtn');
-
-            // ========== CONFIGURATION ==========
-            const CONFIG = {
-                APP_URL: 'https://script.google.com/macros/s/AKfycbzO2ON14ucGrrZWcPwJifbjuYToxtIlJ5Twi92EVctAv7pLIBvMZ6qwEjDe2QhXFEE/exec',
-                LOADER_TIMEOUT: 10000,
-                RETRY_DELAY: 2000,
-                MAX_RETRIES: 3
-            };
-
-            let retryCount = 0;
-            let loaderTimeout = null;
-
-            // ========== LOADER HANDLING ==========
-
-            function hideLoader() {
-                clearTimeout(loaderTimeout);
-                loader.classList.add('hidden');
-            }
-
-            function showLoader() {
-                loader.classList.remove('hidden');
-            }
-
-            function handleLoadError() {
-                hideLoader();
-                errorBox.classList.remove('hidden');
-            }
-
-            // ========== IFRAME HANDLING ==========
-
-            function loadIframe() {
-                showLoader();
-                errorBox.classList.add('hidden');
-                retryCount = 0;
-
-                clearTimeout(loaderTimeout);
-                loaderTimeout = setTimeout(() => {
-                    if (!loader.classList.contains('hidden')) {
-                        handleLoadError();
-                    }
-                }, CONFIG.LOADER_TIMEOUT);
-
-                iframe.src = CONFIG.APP_URL;
-            }
-
-            function onIframeLoad() {
-                hideLoader();
-                errorBox.classList.add('hidden');
-            }
-
-            function onIframeError() {
-                if (retryCount < CONFIG.MAX_RETRIES) {
-                    retryCount++;
-                    setTimeout(() => {
-                        iframe.src = CONFIG.APP_URL;
-                    }, CONFIG.RETRY_DELAY);
-                } else {
-                    handleLoadError();
-                }
-            }
-
-            // ========== FULLSCREEN ==========
-
-            function toggleFullscreen() {
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen().catch((err) => {
-                        console.error('Fullscreen error:', err);
-                    });
-                } else {
-                    document.exitFullscreen().catch((err) => {
-                        console.error('Exit fullscreen error:', err);
-                    });
-                }
-            }
-
-            // ========== RELOAD APP ==========
-
-            window.reloadApp = function() {
-                loadIframe();
-            };
-
-            // ========== EVENT LISTENERS ==========
-
-            iframe.addEventListener('load', onIframeLoad);
-            iframe.addEventListener('error', onIframeError);
-
-            fullscreenBtn.addEventListener('click', toggleFullscreen);
-
-            // Keyboard shortcuts
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'F11') {
-                    e.preventDefault();
-                    toggleFullscreen();
-                }
-                if (e.key === 'F5' || (e.ctrlKey && e.key === 'r')) {
-                    e.preventDefault();
-                    loadIframe();
-                }
-            });
-
-            // Fullscreen change
-            document.addEventListener('fullscreenchange', function() {
-                if (document.fullscreenElement) {
-                    fullscreenBtn.textContent = '⛶';
-                    fullscreenBtn.title = 'Keluar dari layar penuh';
-                } else {
-                    fullscreenBtn.textContent = '⛶';
-                    fullscreenBtn.title = 'Mode layar penuh';
-                }
-            });
-
-            // Online/Offline
-            window.addEventListener('online', function() {
-                if (errorBox.classList.contains('hidden') === false) {
-                    loadIframe();
-                }
-            });
-
-            // ========== INITIAL LOAD ==========
-
-            loadIframe();
-
-            console.log('🚀 LAPODI loaded');
-
+        (function(){
+            const L=document.getElementById('loader'),E=document.getElementById('errorBox'),F=document.getElementById('lapodiFrame'),B=document.getElementById('fullscreenBtn'),U='https://script.google.com/macros/s/AKfycbzO2ON14ucGrrZWcPwJifbjuYToxtIlJ5Twi92EVctAv7pLIBvMZ6qwEjDe2QhXFEE/exec';
+            let r=0,t;
+            function h(){clearTimeout(t);L.classList.add('hidden')}
+            function s(){L.classList.remove('hidden')}
+            function e(){h();E.classList.remove('hidden')}
+            function l(){s();E.classList.add('hidden');r=0;clearTimeout(t);t=setTimeout(()=>{if(!L.classList.contains('hidden'))e()},1e4);F.src=U}
+            F.addEventListener('load',()=>{h();E.classList.add('hidden')});
+            F.addEventListener('error',()=>{if(r<3){r++;setTimeout(()=>{F.src=U},2e3)}else e()});
+            B.addEventListener('click',()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()});
+            document.addEventListener('keydown',e=>{if(e.key==='F11'){e.preventDefault();document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}if(e.key==='F5'||e.ctrlKey&&e.key==='r'){e.preventDefault();l()}});
+            document.addEventListener('fullscreenchange',()=>{B.textContent='⛶'});
+            window.reloadApp=l;
+            window.addEventListener('online',()=>{if(!E.classList.contains('hidden'))l()});
+            l();
         })();
     </script>
 </body>
