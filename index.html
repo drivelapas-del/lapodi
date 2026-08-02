@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>LAPODI</title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -17,12 +17,13 @@
             box-sizing: border-box;
         }
 
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background: #0a0e17;
+        body {
             font-family: 'Inter', sans-serif;
+            background: #0a0e17;
+            color: #ffffff;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
         }
 
         /* ========== LOADER ========== */
@@ -155,11 +156,8 @@
         .app-container {
             width: 100vw;
             height: 100vh;
-            background: #ffffff;
+            background: #0a0e17;
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .app-frame {
@@ -237,7 +235,7 @@
     </div>
 
     <!-- Fullscreen Button -->
-    <button id="fullscreenBtn" class="fullscreen-btn" title="Mode Layar Penuh (F11)">⛶</button>
+    <button id="fullscreenBtn" class="fullscreen-btn">⛶</button>
 
     <!-- App Container -->
     <div class="app-container">
@@ -247,7 +245,7 @@
             src="https://script.google.com/macros/s/AKfycbzO2ON14ucGrrZWcPwJifbjuYToxtIlJ5Twi92EVctAv7pLIBvMZ6qwEjDe2QhXFEE/exec"
             loading="lazy"
             referrerpolicy="no-referrer"
-            sandbox="allow-scripts allow-forms allow-same-origin allow-downloads allow-modals"
+            sandbox="allow-scripts allow-forms allow-same-origin allow-downloads allow-popups allow-modals allow-popups-to-escape-sandbox"
             allowfullscreen>
         </iframe>
     </div>
