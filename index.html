@@ -10,7 +10,349 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0e17;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #e0e7f0;
+        }
+
+        /* Loader */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0e17;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #4a9eff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loader p {
+            font-size: 14px;
+            color: #8a9bb5;
+            letter-spacing: 0.3px;
+        }
+
+        /* Error Box */
+        .error-box {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 14, 23, 0.92);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9998;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .error-box.hidden {
+            display: none;
+        }
+
+        .error-box h3 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #ff6b6b;
+        }
+
+        .error-box p {
+            font-size: 15px;
+            color: #8a9bb5;
+            margin-bottom: 20px;
+            max-width: 400px;
+        }
+
+        .error-box button {
+            background: #4a9eff;
+            color: #fff;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .error-box button:hover {
+            background: #3a8be5;
+        }
+
+        /* Fullscreen Button */
+        .fullscreen-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #c8d6e5;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.2s;
+        }
+
+        .fullscreen-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.05);
+        }
+
+        /* App Container */
+        .app-container {
+            width: 100vw;
+            height: 100vh;
+            background: #0a0e17;
+        }
+
+        .app-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #0a0e17;
+        }
+
+        /* Popup Warning - Enhanced */
+        .popup-warning {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(20, 28, 45, 0.98);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 32px 36px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            z-index: 9997;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.8);
+            max-width: 480px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .popup-warning.show {
+            display: flex;
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .popup-warning .icon {
+            font-size: 48px;
+            margin-bottom: 4px;
+        }
+
+        .popup-warning .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #ffd93d;
+        }
+
+        .popup-warning .text {
+            font-size: 14px;
+            color: #a8b9d0;
+            line-height: 1.6;
+        }
+
+        .popup-warning .text strong {
+            color: #ffd93d;
+        }
+
+        .popup-warning .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        .popup-warning .btn-group button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .popup-warning .btn-group .btn-primary {
+            background: #4a9eff;
+            color: #fff;
+            flex: 1;
+            min-width: 140px;
+            justify-content: center;
+        }
+
+        .popup-warning .btn-group .btn-primary:hover {
+            background: #3a8be5;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(74, 158, 255, 0.3);
+        }
+
+        .popup-warning .btn-group .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: #a8b9d0;
+            flex: 1;
+            min-width: 120px;
+            justify-content: center;
+        }
+
+        .popup-warning .btn-group .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .popup-warning .btn-group .btn-danger {
+            background: #ff6b6b;
+            color: #fff;
+            flex: 1;
+            min-width: 120px;
+            justify-content: center;
+        }
+
+        .popup-warning .btn-group .btn-danger:hover {
+            background: #e55a5a;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 107, 107, 0.3);
+        }
+
+        .popup-warning .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: #6a7b95;
+            font-size: 22px;
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 4px 8px;
+        }
+
+        .popup-warning .close-btn:hover {
+            color: #e0e7f0;
+        }
+
+        /* Overlay */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9996;
+            display: none;
+        }
+
+        .popup-overlay.show {
+            display: block;
+        }
+
+        /* Browser Detection Badge */
+        .browser-badge {
+            font-size: 12px;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 4px 12px;
+            border-radius: 20px;
+            color: #6a7b95;
+            display: inline-block;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .popup-warning {
+                padding: 24px 20px;
+                width: 92%;
+            }
+
+            .popup-warning .icon {
+                font-size: 36px;
+            }
+
+            .popup-warning .title {
+                font-size: 18px;
+            }
+
+            .popup-warning .btn-group button {
+                padding: 10px 16px;
+                font-size: 13px;
+                min-width: 100%;
+            }
+
+            .fullscreen-btn {
+                bottom: 16px;
+                right: 16px;
+                padding: 8px 12px;
+                font-size: 16px;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -27,8 +369,35 @@
         <button onclick="reloadApp()">Muat Ulang</button>
     </div>
 
+    <!-- Popup Overlay -->
+    <div id="popupOverlay" class="popup-overlay"></div>
+
+    <!-- Popup Warning -->
+    <div id="popupWarning" class="popup-warning">
+        <button class="close-btn" onclick="closePopup()">✕</button>
+        <div class="icon">🔔</div>
+        <div class="title">Popup Diblokir!</div>
+        <div class="text">
+            Browser memblokir popup yang dibutuhkan aplikasi. <br>
+            <strong>Izinkan popup</strong> untuk situs ini atau buka secara manual.
+            <br><br>
+            <span class="browser-badge" id="browserBadge">🌐 Mendeteksi browser...</span>
+        </div>
+        <div class="btn-group">
+            <button class="btn-danger" onclick="openPopupSettings()">
+                ⚙️ Izinkan Popup
+            </button>
+            <button class="btn-primary" onclick="openInNewTab()">
+                📂 Buka di Tab Baru
+            </button>
+            <button class="btn-secondary" onclick="copyLink()">
+                📋 Salin Link
+            </button>
+        </div>
+    </div>
+
     <!-- Fullscreen Button -->
-    <button id="fullscreenBtn" class="fullscreen-btn">⛶</button>
+    <button id="fullscreenBtn" class="fullscreen-btn" onclick="toggleFullscreen()">⛶</button>
 
     <!-- App Container -->
     <div class="app-container">
@@ -44,6 +413,269 @@
     </div>
 
     <!-- JS -->
-    <script src="app.js"></script>
+    <script>
+        // ==================== LOADER ====================
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loader').classList.add('hidden');
+            }, 800);
+        });
+
+        // ==================== ERROR HANDLING ====================
+        function reloadApp() {
+            document.getElementById('errorBox').classList.add('hidden');
+            const frame = document.getElementById('lapodiFrame');
+            frame.src = frame.src;
+        }
+
+        // ==================== FULLSCREEN ====================
+        function toggleFullscreen() {
+            const el = document.documentElement;
+            if (!document.fullscreenElement) {
+                el.requestFullscreen?.() || el.webkitRequestFullscreen?.();
+            } else {
+                document.exitFullscreen?.() || document.webkitExitFullscreen?.();
+            }
+        }
+
+        // ==================== POPUP HANDLING ====================
+        const APP_URL = 'https://script.google.com/macros/s/AKfycbzO2ON14ucGrrZWcPwJifbjuYToxtIlJ5Twi92EVctAv7pLIBvMZ6qwEjDe2QhXFEE/exec';
+
+        function showPopup() {
+            document.getElementById('popupOverlay').classList.add('show');
+            document.getElementById('popupWarning').classList.add('show');
+        }
+
+        function closePopup() {
+            document.getElementById('popupOverlay').classList.remove('show');
+            document.getElementById('popupWarning').classList.remove('show');
+        }
+
+        function openInNewTab() {
+            window.open(APP_URL, '_blank');
+            closePopup();
+        }
+
+        function copyLink() {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(APP_URL).then(() => {
+                    showCopyFeedback('✅ Tersalin!');
+                }).catch(() => {
+                    fallbackCopy();
+                });
+            } else {
+                fallbackCopy();
+            }
+        }
+
+        function fallbackCopy() {
+            const textarea = document.createElement('textarea');
+            textarea.value = APP_URL;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            showCopyFeedback('✅ Tersalin!');
+        }
+
+        function showCopyFeedback(msg) {
+            const btn = document.querySelector('.popup-warning .btn-secondary');
+            const original = btn.innerHTML;
+            btn.innerHTML = msg;
+            btn.style.background = 'rgba(74, 255, 150, 0.2)';
+            btn.style.color = '#4aff96';
+            setTimeout(() => {
+                btn.innerHTML = original;
+                btn.style.background = '';
+                btn.style.color = '';
+            }, 2000);
+        }
+
+        // ==================== DETECT BROWSER ====================
+        function detectBrowser() {
+            const ua = navigator.userAgent;
+            const badge = document.getElementById('browserBadge');
+            let browser = '';
+
+            if (ua.includes('Chrome') && !ua.includes('Edg') && !ua.includes('OPR')) {
+                browser = 'Chrome';
+            } else if (ua.includes('Firefox')) {
+                browser = 'Firefox';
+            } else if (ua.includes('Safari') && !ua.includes('Chrome') && !ua.includes('Edg') && !ua.includes('OPR')) {
+                browser = 'Safari';
+            } else if (ua.includes('Edg')) {
+                browser = 'Edge';
+            } else if (ua.includes('OPR') || ua.includes('Opera')) {
+                browser = 'Opera';
+            } else if (ua.includes('MiuiBrowser')) {
+                browser = 'MIUI Browser';
+            } else if (ua.includes('UCBrowser')) {
+                browser = 'UC Browser';
+            } else {
+                browser = 'Browser';
+            }
+
+            badge.textContent = `🌐 ${browser} terdeteksi`;
+            return browser;
+        }
+
+        // ==================== OPEN POPUP SETTINGS ====================
+        function openPopupSettings() {
+            const browser = detectBrowser();
+            let settingsUrl = '';
+
+            // URLs untuk pengaturan popup di berbagai browser
+            const settings = {
+                'Chrome': 'chrome://settings/content/popups',
+                'Firefox': 'about:preferences#privacy',
+                'Edge': 'edge://settings/content/popups',
+                'Safari': 'x-apple.systempreferences:com.apple.preference.security?Privacy',
+                'Opera': 'opera://settings/content/popups',
+                'MIUI Browser': 'https://www.google.com',
+                'UC Browser': 'https://www.google.com'
+            };
+
+            settingsUrl = settings[browser] || 'https://www.google.com';
+
+            try {
+                // Coba buka pengaturan di tab baru
+                const newWindow = window.open(settingsUrl, '_blank');
+                
+                if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+                    // Jika popup masih diblokir, beri alternatif
+                    showManualInstructions(browser);
+                } else {
+                    // Berhasil membuka pengaturan
+                    closePopup();
+                    // Tampilkan pesan sukses
+                    showSuccessMessage();
+                }
+            } catch (e) {
+                // Error handling
+                showManualInstructions(browser);
+            }
+        }
+
+        function showManualInstructions(browser) {
+            // Tutup popup utama
+            closePopup();
+            
+            // Tampilkan instruksi manual
+            const instructions = `
+                <div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+                     background:rgba(20,28,45,0.98);padding:30px;border-radius:20px;
+                     z-index:10000;max-width:400px;text-align:center;
+                     border:1px solid rgba(255,255,255,0.1);box-shadow:0 24px 80px rgba(0,0,0,0.8);">
+                    <div style="font-size:48px;margin-bottom:12px;">🔧</div>
+                    <h3 style="color:#ffd93d;margin-bottom:12px;">Buka Pengaturan Manual</h3>
+                    <p style="color:#a8b9d0;font-size:14px;line-height:1.6;">
+                        Browser ${browser} memblokir popup. <br>
+                        <strong style="color:#4a9eff;">Buka pengaturan dan izinkan popup</strong> untuk situs ini:
+                    </p>
+                    <div style="background:rgba(255,255,255,0.05);padding:12px;border-radius:10px;margin:16px 0;word-break:break-all;">
+                        <code style="color:#8a9bb5;font-size:12px;">${window.location.origin}</code>
+                    </div>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+                        <button onclick="closeManualInstructions();openInNewTab();" 
+                                style="background:#4a9eff;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:500;">
+                            📂 Buka Aplikasi
+                        </button>
+                        <button onclick="closeManualInstructions()" 
+                                style="background:rgba(255,255,255,0.08);color:#a8b9d0;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;">
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            const div = document.createElement('div');
+            div.id = 'manualInstructions';
+            div.innerHTML = instructions;
+            document.body.appendChild(div);
+            
+            // Tambahkan overlay
+            const overlay = document.createElement('div');
+            overlay.id = 'manualOverlay';
+            overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:9999;';
+            document.body.appendChild(overlay);
+            
+            // Reorder z-index
+            document.getElementById('manualInstructions').style.zIndex = '10001';
+            document.getElementById('manualOverlay').style.zIndex = '10000';
+        }
+
+        function closeManualInstructions() {
+            const el = document.getElementById('manualInstructions');
+            const overlay = document.getElementById('manualOverlay');
+            if (el) el.remove();
+            if (overlay) overlay.remove();
+        }
+
+        function showSuccessMessage() {
+            const msg = document.createElement('div');
+            msg.style.cssText = `
+                position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                background: rgba(20, 28, 45, 0.98); padding: 30px; border-radius: 20px;
+                z-index: 10000; text-align: center; max-width: 350px;
+                border: 1px solid rgba(74, 255, 150, 0.3);
+                box-shadow: 0 24px 80px rgba(0, 0, 0, 0.8);
+            `;
+            msg.innerHTML = `
+                <div style="font-size:48px;margin-bottom:12px;">✅</div>
+                <h3 style="color:#4aff96;margin-bottom:8px;">Pengaturan Dibuka!</h3>
+                <p style="color:#a8b9d0;font-size:14px;line-height:1.6;">
+                    Silakan <strong style="color:#ffd93d;">izinkan popup</strong> untuk situs ini,
+                    lalu kembali dan muat ulang aplikasi.
+                </p>
+                <button onclick="this.parentElement.remove();location.reload();" 
+                        style="margin-top:16px;background:#4a9eff;color:#fff;border:none;padding:10px 24px;border-radius:8px;cursor:pointer;font-weight:500;">
+                    🔄 Muat Ulang
+                </button>
+            `;
+            document.body.appendChild(msg);
+        }
+
+        // ==================== IFRAME LOAD HANDLING ====================
+        const frame = document.getElementById('lapodiFrame');
+
+        frame.addEventListener('load', function() {
+            document.getElementById('loader').classList.add('hidden');
+        });
+
+        frame.addEventListener('error', function() {
+            document.getElementById('loader').classList.add('hidden');
+            document.getElementById('errorBox').classList.remove('hidden');
+        });
+
+        // ==================== NETWORK STATUS ====================
+        window.addEventListener('online', function() {
+            document.getElementById('errorBox').classList.add('hidden');
+            frame.src = frame.src;
+        });
+
+        window.addEventListener('offline', function() {
+            document.getElementById('errorBox').classList.remove('hidden');
+        });
+
+        // ==================== INIT ====================
+        // Deteksi browser
+        detectBrowser();
+
+        // Tampilkan popup setelah 1.5 detik
+        setTimeout(() => {
+            showPopup();
+        }, 1500);
+
+        // Sembunyikan popup saat klik overlay
+        document.getElementById('popupOverlay').addEventListener('click', function() {
+            // Tidak menutup agar user tetap sadar
+        });
+
+        console.log('✅ LAPODI siap!');
+        console.log('🔗 URL:', APP_URL);
+        console.log('💡 Klik "Izinkan Popup" untuk membuka pengaturan browser.');
+    </script>
 </body>
 </html>
