@@ -9,8 +9,319 @@
     <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ========== RESET & BASE ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0e17;
+            color: #ffffff;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ========== LOADER ========== */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0e17;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(66, 133, 244, 0.2);
+            border-top-color: #4285f4;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loader p {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #8892a8;
+            letter-spacing: 0.5px;
+        }
+
+        /* ========== ERROR BOX ========== */
+        .error-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1a1f2e;
+            padding: 40px;
+            border-radius: 16px;
+            border: 1px solid #ff4757;
+            text-align: center;
+            z-index: 9999;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+        }
+
+        .error-box.hidden {
+            display: none;
+        }
+
+        .error-box h3 {
+            font-size: 22px;
+            color: #ff4757;
+            margin-bottom: 12px;
+        }
+
+        .error-box p {
+            color: #8892a8;
+            font-size: 14px;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .error-box button {
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .error-box button:hover {
+            background: #5a9af5;
+        }
+
+        /* ========== FULLSCREEN BUTTON ========== */
+        .fullscreen-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(26, 31, 46, 0.85);
+            backdrop-filter: blur(10px);
+            color: #ccd6f6;
+            border: 1px solid rgba(255,255,255,0.06);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 9998;
+        }
+
+        .fullscreen-btn:hover {
+            transform: translateY(-2px);
+            background: rgba(66, 133, 244, 0.2);
+            border-color: rgba(66, 133, 244, 0.3);
+            color: #ffffff;
+        }
+
+        .fullscreen-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* ========== NEW TAB BUTTON ========== */
+        .new-tab-btn {
+            position: fixed;
+            bottom: 80px;
+            right: 24px;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(26, 31, 46, 0.85);
+            backdrop-filter: blur(10px);
+            color: #ccd6f6;
+            border: 1px solid rgba(255,255,255,0.06);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 9998;
+        }
+
+        .new-tab-btn:hover {
+            transform: translateY(-2px);
+            background: rgba(52, 211, 153, 0.2);
+            border-color: rgba(52, 211, 153, 0.3);
+            color: #ffffff;
+        }
+
+        .new-tab-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* ========== APP CONTAINER ========== */
+        .app-container {
+            width: 100vw;
+            height: 100vh;
+            background: #0a0e17;
+            overflow: hidden;
+        }
+
+        .app-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #ffffff;
+            display: block;
+        }
+
+        /* ========== NOTIFICATION TOAST ========== */
+        .notification {
+            position: fixed;
+            bottom: 140px;
+            right: 24px;
+            background: #1a1f2e;
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.06);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            color: #ccd6f6;
+            font-size: 13px;
+            z-index: 99999;
+            max-width: 320px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(20px);
+            opacity: 0;
+            backdrop-filter: blur(10px);
+            pointer-events: none;
+        }
+
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .notification.hidden {
+            transform: translateY(20px);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .notification.success {
+            border-color: rgba(52, 211, 153, 0.3);
+        }
+
+        .notification.error {
+            border-color: rgba(255, 71, 87, 0.3);
+        }
+
+        .notification.info {
+            border-color: rgba(66, 133, 244, 0.3);
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .fullscreen-btn, .new-tab-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+                border-radius: 10px;
+            }
+
+            .fullscreen-btn {
+                bottom: 16px;
+                right: 16px;
+            }
+
+            .new-tab-btn {
+                bottom: 68px;
+                right: 16px;
+            }
+
+            .error-box {
+                padding: 28px 20px;
+            }
+
+            .error-box h3 {
+                font-size: 18px;
+            }
+
+            .notification {
+                bottom: 130px;
+                right: 16px;
+                left: 16px;
+                max-width: none;
+                font-size: 12px;
+                padding: 10px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .fullscreen-btn, .new-tab-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+                border-radius: 8px;
+            }
+
+            .fullscreen-btn {
+                bottom: 12px;
+                right: 12px;
+            }
+
+            .new-tab-btn {
+                bottom: 58px;
+                right: 12px;
+            }
+        }
+
+        /* ========== SCROLLBAR ========== */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0e17;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1a1f2e;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2a2f3e;
+        }
+    </style>
 </head>
 
 <body>
@@ -27,8 +338,9 @@
         <button onclick="reloadApp()">Muat Ulang</button>
     </div>
 
-    <!-- Fullscreen Button -->
-    <button id="fullscreenBtn" class="fullscreen-btn">⛶</button>
+    <!-- Buttons -->
+    <button id="newTabBtn" class="new-tab-btn" title="Buka di Tab Baru (Ctrl+Shift+N)">📂</button>
+    <button id="fullscreenBtn" class="fullscreen-btn" title="Mode Layar Penuh (F11)">⛶</button>
 
     <!-- App Container -->
     <div class="app-container">
@@ -38,12 +350,268 @@
             src="https://script.google.com/macros/s/AKfycbzO2ON14ucGrrZWcPwJifbjuYToxtIlJ5Twi92EVctAv7pLIBvMZ6qwEjDe2QhXFEE/exec"
             loading="lazy"
             referrerpolicy="no-referrer"
-            sandbox="allow-scripts allow-forms allow-same-origin allow-downloads"
+            sandbox="allow-scripts allow-forms allow-same-origin allow-downloads allow-popups allow-modals allow-popups-to-escape-sandbox"
             allowfullscreen>
         </iframe>
     </div>
 
-    <!-- JS -->
-    <script src="app.js"></script>
+    <!-- Notification -->
+    <div id="notification" class="notification hidden">
+        <span id="notificationMessage"></span>
+    </div>
+
+    <script>
+        // ============================================
+        // LAPODI - Main Application Script
+        // ============================================
+
+        (function() {
+            'use strict';
+
+            // ========== DOM REFERENCES ==========
+            const loader = document.getElementById('loader');
+            const errorBox = document.getElementById('errorBox');
+            const iframe = document.getElementById('lapodiFrame');
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            const newTabBtn = document.getElementById('newTabBtn');
+            const notification = document.getElementById('notification');
+            const notificationMessage = document.getElementById('notificationMessage');
+
+            // ========== CONFIGURATION ==========
+            const CONFIG = {
+                APP_URL: 'https://script.google.com/macros/s/AKfycbzO2ON14ucGrrZWcPwJifbjuYToxtIlJ5Twi92EVctAv7pLIBvMZ6qwEjDe2QhXFEE/exec',
+                LOADER_TIMEOUT: 10000,
+                RETRY_DELAY: 2000,
+                MAX_RETRIES: 3
+            };
+
+            let retryCount = 0;
+            let loaderTimeout = null;
+
+            // ========== UTILITY FUNCTIONS ==========
+
+            function showNotification(message, type = 'info', duration = 3000) {
+                notification.className = 'notification hidden';
+                notificationMessage.textContent = message;
+
+                void notification.offsetWidth;
+
+                notification.className = `notification ${type}`;
+                setTimeout(() => {
+                    notification.classList.add('show');
+                }, 50);
+
+                clearTimeout(notification._hideTimer);
+                notification._hideTimer = setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        notification.className = 'notification hidden';
+                    }, 400);
+                }, duration);
+            }
+
+            function copyToClipboard(text) {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        showNotification('📋 URL disalin ke clipboard!', 'info', 3000);
+                    }).catch(() => {
+                        fallbackCopy(text);
+                    });
+                } else {
+                    fallbackCopy(text);
+                }
+            }
+
+            function fallbackCopy(text) {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    showNotification('📋 URL disalin ke clipboard!', 'info', 3000);
+                } catch (e) {
+                    showNotification('❌ Gagal menyalin URL', 'error', 3000);
+                }
+                document.body.removeChild(textarea);
+            }
+
+            // ========== LOADER HANDLING ==========
+
+            function hideLoader() {
+                clearTimeout(loaderTimeout);
+                loader.classList.add('hidden');
+            }
+
+            function showLoader() {
+                loader.classList.remove('hidden');
+            }
+
+            function handleLoadError() {
+                hideLoader();
+                errorBox.classList.remove('hidden');
+                showNotification('Gagal memuat aplikasi', 'error', 4000);
+            }
+
+            // ========== IFRAME HANDLING ==========
+
+            function loadIframe() {
+                showLoader();
+                errorBox.classList.add('hidden');
+                retryCount = 0;
+
+                clearTimeout(loaderTimeout);
+                loaderTimeout = setTimeout(() => {
+                    if (!loader.classList.contains('hidden')) {
+                        handleLoadError();
+                    }
+                }, CONFIG.LOADER_TIMEOUT);
+
+                iframe.src = CONFIG.APP_URL;
+            }
+
+            function onIframeLoad() {
+                hideLoader();
+                errorBox.classList.add('hidden');
+                showNotification('Aplikasi berhasil dimuat ✅', 'success', 2000);
+            }
+
+            function onIframeError() {
+                if (retryCount < CONFIG.MAX_RETRIES) {
+                    retryCount++;
+                    showNotification(`Mencoba ulang (${retryCount}/${CONFIG.MAX_RETRIES})...`, 'info', 2000);
+                    setTimeout(() => {
+                        iframe.src = CONFIG.APP_URL;
+                    }, CONFIG.RETRY_DELAY);
+                } else {
+                    handleLoadError();
+                    showNotification('Gagal memuat setelah beberapa percobaan', 'error', 4000);
+                }
+            }
+
+            // ========== OPEN IN NEW TAB ==========
+
+            function openInNewTab() {
+                try {
+                    let currentUrl = iframe.src;
+
+                    try {
+                        const iframeWindow = iframe.contentWindow;
+                        if (iframeWindow && iframeWindow.location) {
+                            currentUrl = iframeWindow.location.href;
+                        }
+                    } catch (e) {
+                        console.log('Cannot access iframe location due to CORS');
+                    }
+
+                    // Coba buka dengan window.open
+                    const newWindow = window.open(currentUrl, '_blank');
+
+                    if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+                        // Popup diblokir
+                        showNotification('⚠️ Popup diblokir! URL disalin ke clipboard.', 'error', 4000);
+                        copyToClipboard(currentUrl);
+                    } else {
+                        showNotification('✅ Dibuka di tab baru', 'success', 2000);
+                    }
+                } catch (e) {
+                    console.error('Error opening new tab:', e);
+                    showNotification('❌ Gagal membuka tab baru', 'error', 3000);
+                    copyToClipboard(CONFIG.APP_URL);
+                }
+            }
+
+            // ========== FULLSCREEN ==========
+
+            function toggleFullscreen() {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().then(() => {
+                        showNotification('⛶ Mode layar penuh', 'info', 1500);
+                    }).catch((err) => {
+                        showNotification('❌ Gagal masuk layar penuh', 'error', 3000);
+                        console.error('Fullscreen error:', err);
+                    });
+                } else {
+                    document.exitFullscreen().then(() => {
+                        showNotification('Keluar dari layar penuh', 'info', 1500);
+                    }).catch((err) => {
+                        console.error('Exit fullscreen error:', err);
+                    });
+                }
+            }
+
+            // ========== RELOAD APP ==========
+
+            window.reloadApp = function() {
+                loadIframe();
+            };
+
+            // ========== EVENT LISTENERS ==========
+
+            iframe.addEventListener('load', onIframeLoad);
+            iframe.addEventListener('error', onIframeError);
+
+            fullscreenBtn.addEventListener('click', toggleFullscreen);
+            newTabBtn.addEventListener('click', openInNewTab);
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // F11 for fullscreen
+                if (e.key === 'F11') {
+                    e.preventDefault();
+                    toggleFullscreen();
+                }
+                // Ctrl+Shift+N for new tab
+                if (e.ctrlKey && e.shiftKey && (e.key === 'N' || e.key === 'n')) {
+                    e.preventDefault();
+                    openInNewTab();
+                }
+                // Ctrl+R or F5 for refresh
+                if (e.key === 'F5' || (e.ctrlKey && e.key === 'r')) {
+                    e.preventDefault();
+                    loadIframe();
+                    showNotification('🔄 Memuat ulang...', 'info', 1500);
+                }
+            });
+
+            // Fullscreen change
+            document.addEventListener('fullscreenchange', function() {
+                if (document.fullscreenElement) {
+                    fullscreenBtn.textContent = '⛶';
+                    fullscreenBtn.title = 'Keluar dari layar penuh';
+                } else {
+                    fullscreenBtn.textContent = '⛶';
+                    fullscreenBtn.title = 'Mode layar penuh';
+                }
+            });
+
+            // Online/Offline
+            window.addEventListener('online', function() {
+                if (errorBox.classList.contains('hidden') === false) {
+                    showNotification('🌐 Kembali online! Memuat ulang...', 'info', 2000);
+                    loadIframe();
+                } else {
+                    showNotification('🌐 Kembali online', 'success', 2000);
+                }
+            });
+
+            window.addEventListener('offline', function() {
+                showNotification('📡 Koneksi terputus!', 'error', 3000);
+            });
+
+            // ========== INITIAL LOAD ==========
+
+            loadIframe();
+
+            console.log('🚀 LAPODI v3.0 loaded');
+            console.log('📌 Shortcuts:');
+            console.log('  F11 = Fullscreen');
+            console.log('  Ctrl+Shift+N = Open in new tab');
+            console.log('  F5 / Ctrl+R = Refresh');
+
+        })();
+    </script>
 </body>
 </html>
